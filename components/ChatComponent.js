@@ -8,7 +8,6 @@ export default function ChatComponent() {
     const [messages, setMessages] = useState([]);
     const [client, setClient] = useState(null);
 
-
     const startMatrixClient = () => {
         if (!userId || !accessToken) {
             alert("Please provide a valid User ID and Access Token");
@@ -54,40 +53,127 @@ export default function ChatComponent() {
     }, [client]);
 
     return (
-        <div>
-            <h1>Matrix Chat</h1>
-            <div>
-                <label htmlFor="userId">User ID:</label>
-                <input
-                    type="text"
-                    id="userId"
-                    value={userId}
-                    onChange={(e) => setUserId(e.target.value)}
-                    placeholder="@youruser:localhost"
-                />
-            </div>
-            <div>
-                <label htmlFor="accessToken">Access Token:</label>
-                <input
-                    type="text"
-                    id="accessToken"
-                    value={accessToken}
-                    onChange={(e) => setAccessToken(e.target.value)}
-                    placeholder="syt_..."
-                />
-            </div>
-            <div>
-                <button onClick={startMatrixClient}>Start Chat</button>
-            </div>
-            <div>
-                <h2>Messages in Room: {roomId}</h2>
-                <ul>
-                    {messages.map((msg, index) => (
-                        <li key={index}>
-                            <strong>{msg.sender}</strong>: {msg.body} <em>({new Date(msg.timestamp).toLocaleString()})</em>
-                        </li>
-                    ))}
-                </ul>
+        <div style={{ fontFamily: "Arial, sans-serif", height: "99vh", display: "flex", flexDirection: "column" }}>
+            {/* Navbar */}
+            <header style={{
+                backgroundColor: "rgb(0, 124, 232)",
+                color: "white",
+                padding: "15px",
+                textAlign: "center",
+                fontSize: "18px",
+                fontWeight: "bold",
+                borderRadius: "15px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+            }}>
+                Matrix Chat
+            </header>
+
+            {/* Chat Area */}
+            <div style={{
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+                overflow: "hidden",
+                backgroundColor: "#f5f5f5",
+            }}>
+                {/* Message List */}
+                <div style={{
+                    flex: 1,
+                    overflowY: "auto",
+                    padding: "10px",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "10px",
+                }}>
+                    {messages.map((msg, index) => {
+                        const isOwnMessage = msg.sender === userId;
+                        return (
+                            <div key={index} style={{
+                                display: "flex",
+                                justifyContent: isOwnMessage ? "flex-end" : "flex-start",
+                            }}>
+                                <div
+                                    style={{
+                                        padding: "10px",
+                                        backgroundColor: isOwnMessage ? "rgb(0, 124, 232)" : "rgb(226, 224, 224)",
+                                        borderRadius: "15px",
+                                        color: isOwnMessage ? "white" : "black",
+                                        maxWidth: "70%",
+                                        wordWrap: "break-word",
+                                    }}
+                                >
+                                    <p style={{ margin: 0 }}>{msg.body}</p>
+                                    <p style={{
+                                        margin: 0,
+                                        fontSize: "0.7em",
+                                        textAlign: "right",
+                                        color: isOwnMessage ? "lightgray" : "gray",
+                                    }}>
+                                        {new Date(msg.timestamp).toLocaleTimeString()}
+                                    </p>
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+
+                {/* User Input */}
+                <div style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    padding: "10px",
+                    backgroundColor: "white",
+                    boxShadow: "0 -2px 4px rgba(0, 0, 0, 0.1)",
+                }}>
+                    <input
+                        style={{
+                            marginBottom: "10px",
+                            borderRadius: "5px",
+                            padding: "10px",
+                            fontSize: "14px",
+                            border: "1px solid #ccc",
+                        }}
+                        type="text"
+                        id="userId"
+                        value={userId}
+                        onChange={(e) => setUserId(e.target.value)}
+                        placeholder="@youruser:localhost"
+                    />
+                    <input
+                        style={{
+                            marginBottom: "10px",
+                            borderRadius: "5px",
+                            padding: "10px",
+                            fontSize: "14px",
+                            border: "1px solid #ccc",
+                        }}
+                        type="text"
+                        id="accessToken"
+                        value={accessToken}
+                        onChange={(e) => setAccessToken(e.target.value)}
+                        placeholder="syt_..."
+                    />
+                    <button
+                        style={{
+                            borderRadius: "5px",
+                            padding: "10px",
+                            backgroundColor: "rgb(0, 124, 232)",
+                            color: "white",
+                            fontSize: "14px",
+                            fontWeight: "bold",
+                            border: "none",
+                            cursor: "pointer",
+                            transition: "transform 0.1s",
+                            width: "fit-content",
+                            margin: "auto",
+                        }}
+                        onClick={startMatrixClient}
+                        onMouseDown={(e) => e.target.style.transform = "scale(0.95)"}
+                        onMouseUp={(e) => e.target.style.transform = "scale(1)"}
+                    >
+                        Start Chat
+                    </button>
+                </div>
             </div>
         </div>
     );

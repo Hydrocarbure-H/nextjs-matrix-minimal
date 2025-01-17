@@ -1,5 +1,8 @@
-import client from "../../utils/matrix";
+import sdk from "matrix-js-sdk";
 
+const client = sdk.createClient({
+    baseUrl: "http://localhost:8008",
+});
 /**
  * Register a new user
  * @param {string} username

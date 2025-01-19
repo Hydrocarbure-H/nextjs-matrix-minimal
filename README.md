@@ -3,6 +3,7 @@
 # Matrix Message Reader
 
 This project demonstrates how to set up a local Matrix Synapse server and use a Matrix client to register a user, join a room, send messages, and fetch those messages.
+<img width="1796" alt="image" src="https://github.com/user-attachments/assets/ed4ae99d-d560-4860-b4eb-e464cedec448" />
 
 ## Setup Instructions
 

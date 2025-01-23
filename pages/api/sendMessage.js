@@ -1,8 +1,5 @@
 import sdk from "matrix-js-sdk";
-
-const client = sdk.createClient({
-    baseUrl: "http://localhost:8008",
-});
+import matrixClient from "@/utils";
 
 /**
  * Send a message to a room
@@ -24,11 +21,11 @@ export default async function handler(req, res) {
     }
 
     try {
-        client.setAccessToken(accessToken);
+        matrixClient.setAccessToken(accessToken);
 
         // Send the message and generate a transaction ID
         const txnId = `m${Date.now()}`;
-        const response = await client.sendEvent(roomId, "m.room.message", {
+        const response = await matrixClient.sendEvent(roomId, "m.room.message", {
             msgtype: "m.text",
             body: message,
         }, txnId);

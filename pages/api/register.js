@@ -1,8 +1,5 @@
 import sdk from "matrix-js-sdk";
-
-const client = sdk.createClient({
-    baseUrl: "http://localhost:8008",
-});
+import matrixClient from "@/utils";
 /**
  * Register a new user
  * @param {string} username
@@ -18,7 +15,7 @@ export default async function handler(req, res) {
     const { username, password } = req.body;
 
     try {
-        const response = await client.registerRequest({
+        const response = await matrixClient.registerRequest({
             username,
             password,
             auth: { type: "m.login.dummy" },

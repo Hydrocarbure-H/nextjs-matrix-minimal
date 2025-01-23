@@ -1,3 +1,6 @@
+"use client";
+
+
 import { useEffect, useState } from "react";
 import * as sdk from "matrix-js-sdk";
 
@@ -7,6 +10,31 @@ export default function ChatComponent() {
     const [roomId, setRoomId] = useState("!cMsVuhYYsktMNsiNXM:localhost");
     const [messages, setMessages] = useState([]);
     const [client, setClient] = useState(null);
+    const [message, setMessage] = useState(""); // État pour le message
+
+    const sendMessage = async () => {
+        if (!message.trim()) {
+            alert("Message cannot be empty");
+            return;
+        }
+        if (!client) {
+            alert("Matrix client is not initialized");
+            return;
+        }
+
+        try {
+            const txnId = `m${Date.now()}`; // Génération d'un ID unique pour la transaction
+            await client.sendEvent(roomId, "m.room.message", {
+                msgtype: "m.text",
+                body: message,
+            }, txnId);
+            console.log("Message sent:", message);
+            setMessage(""); // Réinitialise le champ d'entrée après l'envoi
+        } catch (error) {
+            console.error("Failed to send message:", error);
+            alert("Failed to send the message");
+        }
+    };
 
     const startMatrixClient = () => {
         if (!userId || !accessToken) {
@@ -42,6 +70,14 @@ export default function ChatComponent() {
             }
         });
     };
+
+    useEffect(() => {
+        const storedUserId = document.cookie.replace(/(?:(?:^|.*;\s*)userId\s*=\s*([^;]*).*$)|^.*$/, "$1");
+        const storedAccessToken = document.cookie.replace(/(?:(?:^|.*;\s*)accessToken\s*=\s*([^;]*).*$)|^.*$/, "$1");
+
+        setAccessToken(storedAccessToken);
+        setUserId(storedUserId);
+    });
 
     useEffect(() => {
         return () => {
@@ -125,6 +161,45 @@ export default function ChatComponent() {
                     backgroundColor: "white",
                     boxShadow: "0 -2px 4px rgba(0, 0, 0, 0.1)",
                 }}>
+                    <div style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "10px",
+                        marginTop: "10px",
+                    }}>
+                        <input
+                            style={{
+                                flex: 1,
+                                borderRadius: "5px",
+                                padding: "10px",
+                                fontSize: "14px",
+                                border: "1px solid #ccc",
+                            }}
+                            type="text"
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                            placeholder="Type your message..."
+                        />
+                        <button
+                            style={{
+                                borderRadius: "5px",
+                                padding: "10px 15px",
+                                backgroundColor: "rgb(0, 124, 232)",
+                                color: "white",
+                                fontSize: "14px",
+                                fontWeight: "bold",
+                                border: "none",
+                                cursor: "pointer",
+                                transition: "transform 0.1s",
+                            }}
+                            onClick={sendMessage}
+                            onMouseDown={(e) => e.target.style.transform = "scale(0.95)"}
+                            onMouseUp={(e) => e.target.style.transform = "scale(1)"}
+                        >
+                            Send
+                        </button>
+                    </div>
+
                     <input
                         style={{
                             marginBottom: "10px",
@@ -136,7 +211,11 @@ export default function ChatComponent() {
                         type="text"
                         id="userId"
                         value={userId}
-                        onChange={(e) => setUserId(e.target.value)}
+                        onChange={(e) => {
+                            setUserId(e.target.value);
+                            document.cookie = `userId=${e.target.value}`;
+                            //sessionStorage.setItem("userId", e.target.value)
+                        }}
                         placeholder="@youruser:localhost"
                     />
                     <input
@@ -150,7 +229,10 @@ export default function ChatComponent() {
                         type="text"
                         id="accessToken"
                         value={accessToken}
-                        onChange={(e) => setAccessToken(e.target.value)}
+                        onChange={(e) => {
+                            setAccessToken(e.target.value);
+                            document.cookie = `accessToken=${e.target.value}`;
+                        }}
                         placeholder="syt_..."
                     />
                     <button

@@ -1,8 +1,6 @@
 import sdk from "matrix-js-sdk";
 
-const client = sdk.createClient({
-    baseUrl: "http://localhost:8008",
-});
+import matrixClient from "@/utils"
 
 /**
  * Create a new room
@@ -26,10 +24,10 @@ export default async function handler(req, res) {
 
     try {
 
-        client.setAccessToken(accessToken);
+        matrixClient.setAccessToken(accessToken);
 
         // Create the room with the given alias and visibility or default to private
-        const response = await client.createRoom({
+        const response = await matrixClient.createRoom({
             room_alias_name: roomAlias,
             visibility: visibility || "private",
         });

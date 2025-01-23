@@ -1,9 +1,5 @@
 import sdk from "matrix-js-sdk";
-
-const client = sdk.createClient({
-    baseUrl: "http://localhost:8008",
-});
-
+import matrixClient from "@/utils";
 /**
  * Join a room
  * @param {string} accessToken
@@ -24,10 +20,10 @@ export default async function handler(req, res) {
 
     try {
 
-        client.setAccessToken(accessToken);
+        matrixClient.setAccessToken(accessToken);
 
         // Join the room
-        const response = await client.joinRoom(roomIdOrAlias);
+        const response = await matrixClient.joinRoom(roomIdOrAlias);
 
         return res.status(200).json({
             message: "Successfully joined the room",

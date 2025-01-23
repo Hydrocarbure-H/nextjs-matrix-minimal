@@ -1,8 +1,5 @@
 import sdk from "matrix-js-sdk";
-
-const client = sdk.createClient({
-    baseUrl: "http://localhost:8008",
-});
+import matrixClient from "@/utils";
 /**
  * Login a user
  * @param {string} username
@@ -18,7 +15,7 @@ export default async function handler(req, res) {
     const { username, password } = req.body;
 
     try {
-        const response = await client.login("m.login.password", {
+        const response = await matrixClient.login("m.login.password", {
             identifier: {
                 type: "m.id.user",
                 user: username,
@@ -26,8 +23,8 @@ export default async function handler(req, res) {
             password: password,
         });
         console.log("Access Token:", response.access_token);
-        client.setAccessToken(response.access_token);
-        client.startClient();
+        matrixClient.setAccessToken(response.access_token);
+        matrixClient.startClient();
         return res.status(200).json({ accessToken: response.access_token });
     } catch (error) {
         console.error("Login failed:", error.message);

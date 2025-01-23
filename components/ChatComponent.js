@@ -36,7 +36,7 @@ export default function ChatComponent() {
         }
     };
 
-    const startMatrixClient = () => {
+    const startMatrixClient = async () => {
         if (!userId || !accessToken) {
             alert("Please provide a valid User ID and Access Token");
             return;
@@ -46,9 +46,12 @@ export default function ChatComponent() {
             baseUrl: "http://localhost:8008",
             accessToken: accessToken,
             userId: userId,
+            cryptoStore: new sdk.IndexedDBCryptoStore(window.indexedDB, "matrix-client-crypto"),
         });
 
-        matrixClient.startClient({ initialSyncLimit: 8 });
+        await matrixClient.initRustCrypto();
+
+        matrixClient.startClient({ initialSyncLimit: 10 });
         setClient(matrixClient);
 
         matrixClient.once("sync", (state) => {
@@ -109,7 +112,6 @@ export default function ChatComponent() {
                 flex: 1,
                 display: "flex",
                 flexDirection: "column",
-                overflow: "hidden",
                 backgroundColor: "#f5f5f5",
             }}>
                 {/* Message List */}

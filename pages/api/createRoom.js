@@ -25,17 +25,19 @@ export default async function handler(req, res) {
     try {
 
         matrixClient.setAccessToken(accessToken);
+        await matrixClient.initRustCrypto();
 
         // Create the room with the given alias and visibility or default to private
         const response = await matrixClient.createRoom({
             room_alias_name: roomAlias,
-            visibility: visibility || "private",
+            visibility: visibility || "shared",
         });
 
-        await matrixClient.setRoomEncryption(roomId, {
+        await matrixClient.setRoomEncryption(response.roomId, {
             algorithm: "m.megolm.v1.aes-sha2",
         });
-        console.log(`Encryption enabled for room: ${roomId}`);
+
+        console.log(`Encryption enabled for room: ${response.roomId}`);
 
         return res.status(200).json({
             message: "Room created successfully",

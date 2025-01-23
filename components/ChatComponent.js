@@ -20,7 +20,7 @@ export default function ChatComponent() {
             userId: userId,
         });
 
-        matrixClient.startClient({ initialSyncLimit: 10 });
+        matrixClient.startClient({ initialSyncLimit: 8 });
         setClient(matrixClient);
 
         matrixClient.once("sync", (state) => {

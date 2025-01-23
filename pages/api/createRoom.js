@@ -32,6 +32,11 @@ export default async function handler(req, res) {
             visibility: visibility || "private",
         });
 
+        await matrixClient.setRoomEncryption(roomId, {
+            algorithm: "m.megolm.v1.aes-sha2",
+        });
+        console.log(`Encryption enabled for room: ${roomId}`);
+
         return res.status(200).json({
             message: "Room created successfully",
             roomId: response.room_id,

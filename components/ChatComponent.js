@@ -134,7 +134,7 @@ export default function ChatComponent() {
                                         backgroundColor: isOwnMessage ? "rgb(0, 124, 232)" : "rgb(226, 224, 224)",
                                         borderRadius: "15px",
                                         color: isOwnMessage ? "white" : "black",
-                                        maxWidth: "70%",
+                                        maxWidth: "40%",
                                         wordWrap: "break-word",
                                     }}
                                 >

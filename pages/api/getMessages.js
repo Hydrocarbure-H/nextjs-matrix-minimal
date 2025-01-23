@@ -1,5 +1,5 @@
 import sdk from "matrix-js-sdk";
-
+// UNUSED
 /**
  * Fetch messages from a room
  * @param {string} accessToken
